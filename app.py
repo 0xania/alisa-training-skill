@@ -7,31 +7,23 @@ app = Flask(__name__)
 def main():
     req = request.get_json()
 
-    audio_url = "https://raw.githubusercontent.com/0xania/alisa-training-skill/99ee2e84f6878b53b06f1219a29458ca245590a8/trenirovka.mp3"
-
-    response = {
-        "version": req.get("version", "1.0"),
-        "session": req.get("session"),
+    res = {
         "response": {
-            "text": "Starting training. Playing audio.",
-            "tts": "Starting training. Playing audio.",
-            "end_session": True,
-            "directives": [
+            "text": "Начинаю тренировку. Включаю ваш аудиофайл.",
+            "tts": "Начинаю тренировку. Включаю ваш аудиофайл.",
+            "end_session": False,
+            "buttons": [
                 {
-                    "type": "AudioPlayer.Play",
-                    "audio_item": {
-                        "stream": {
-                            "url": audio_url,
-                            "offset_ms": 0,
-                            "token": "training-token"
-                        }
-                    }
+                    "title": "Слушать тренировку",
+                    "url": "https://drive.google.com/uc?export=download&id=1nIsjdQZX333HK7zlkn2NEoRfje8EOYgd",
+                    "hide": False
                 }
             ]
-        }
+        },
+        "version": req.get("version", "1.0")
     }
 
-    return jsonify(response)
+    return jsonify(res)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
