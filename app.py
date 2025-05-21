@@ -11,7 +11,7 @@ def main():
     # SSML-ответ с тегом <speaker>
     ssml = f"<speak>Начинаю тренировку! " \
            f"<speaker audio='{audio_url}'/>" \
-           f" Удачной тренировки!</speak>"
+           f" Удачной тренировировки!</speak>"
 
     response = {
         "version": req.get("version", "1.0"),
@@ -27,5 +27,3 @@ def main():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
-вот это все скопировать в файл?
