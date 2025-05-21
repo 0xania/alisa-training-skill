@@ -21,7 +21,8 @@ def main():
                     "audio_item": {
                         "stream": {
                             "url": audio_url,
-                            "offset_ms": 0
+                            "offset_ms": 0,
+                            "token": "training-audio-token"
                         }
                     }
                 }
