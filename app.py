@@ -6,23 +6,15 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def main():
     req = request.get_json()
-    audio_url = (
-        "https://raw.githubusercontent.com/"
-        "0xania/alisa-training-skill/"
-        "fc492be8c0e3decbd8d70b9f0517748c292db37a/"
-        "Тренировка.mp3"
-    )
+
+    audio_url = "https://raw.githubusercontent.com/0xania/alisa-training-skill/99ee2e84f6878b53b06f1219a29458ca245590a8/trenirovka.mp3"
 
     response = {
         "version": req.get("version", "1.0"),
         "session": req.get("session"),
         "response": {
-            "text": "Начинаю тренировку. Воспроизводится аудио.",
-            "tts": (
-                "<speak>Начинаю тренировку! "
-                f"<speaker audio=\"{audio_url}\"/>"
-                " Удачной тренировки!</speak>"
-            ),
+            "text": "Starting training. Playing audio.",
+            "tts": "Starting training. Playing audio.",
             "end_session": True,
             "directives": [
                 {
