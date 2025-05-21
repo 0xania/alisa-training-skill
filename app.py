@@ -6,22 +6,39 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def main():
     req = request.get_json()
-    audio_url = "https://drive.google.com/uc?export=download&id=1nIsjdQZX333HK7zlkn2NEoRfje8EOYgd"
-
-    # SSML-ответ с тегом <speaker>
-    ssml = f"<speak>Начинаю тренировку! " \
-           f"<speaker audio='{audio_url}'/>" \
-           f" Удачной тренировировки!</speak>"
+    audio_url = (
+        "https://raw.githubusercontent.com/"
+        "0xania/alisa-training-skill/"
+        "fc492be8c0e3decbd8d70b9f0517748c292db37a/"
+        "Тренировка.mp3"
+    )
 
     response = {
         "version": req.get("version", "1.0"),
         "session": req.get("session"),
         "response": {
-            "text": "Начинаю тренировку! Воспроизводится аудио.",
-            "tts": ssml,
-            "end_session": True
+            "text": "Начинаю тренировку. Воспроизводится аудио.",
+            "tts": (
+                "<speak>Начинаю тренировку! "
+                f"<speaker audio=\"{audio_url}\"/>"
+                " Удачной тренировки!</speak>"
+            ),
+            "end_session": True,
+            "directives": [
+                {
+                    "type": "AudioPlayer.Play",
+                    "audio_item": {
+                        "stream": {
+                            "url": audio_url,
+                            "offset_ms": 0,
+                            "token": "training-token"
+                        }
+                    }
+                }
+            ]
         }
     }
+
     return jsonify(response)
 
 if __name__ == '__main__':
