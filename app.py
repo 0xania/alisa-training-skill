@@ -1,87 +1,34 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
-
-# Список аудиофайлов
-audio_files = [
-    "https://drive.google.com/uc?export=download&id=1o7c-Z2GEBdeD1jus8BLnEgi3_NU336r6",
-    "https://drive.google.com/uc?export=download&id=1nzQJzL_WaXQrovpdKguEfoILlHRArjR5",
-    "https://drive.google.com/uc?export=download&id=1o3c5ecJsetjT0OpkEoJSORip98MRvLNV",
-    "https://drive.google.com/uc?export=download&id=1o8g744KOih2S02Ss7xAeH7ukwKyKXpht"
-]
 
 @app.route('/', methods=['POST'])
 def main():
     req = request.get_json()
-    req_type = req['request']['type']
 
-    # Запуск навыка
-    if req_type == 'SimpleUtterance':
-        return jsonify({
-            "response": {
-                "text": "Начинаю тренировку",
-                "tts": "Начинаю тренировку",
-                "end_session": True
-            },
-            "version": "1.0",
-            "response_directives": [
-                {
-                    "type": "AudioPlayer.Play",
-                    "audio_item": {
-                        "stream": {
-                            "url": audio_files[0],
-                            "offset_in_milliseconds": 0
-                        }
-                    }
-                }
-            ]
-        })
-
-    # Когда заканчивается один из аудиофайлов
-    elif req_type == 'AudioPlayer.PlaybackFinished':
-        current_url = req['request']['payload']['audio_item']['stream']['url']
-        try:
-            next_index = audio_files.index(current_url) + 1
-            next_url = audio_files[next_index]
-        except (ValueError, IndexError):
-            # Все части проиграны
-            return jsonify({
-                "response": {
-                    "text": "Тренировка завершена. Отличная работа!",
-                    "tts": "Тренировка завершена. Отличная работа!",
-                    "end_session": True
-                },
-                "version": "1.0"
-            })
-
-        return jsonify({
-            "response": {
-                "text": "",
-                "tts": "",
-                "end_session": True
-            },
-            "version": "1.0",
-            "response_directives": [
-                {
-                    "type": "AudioPlayer.Play",
-                    "audio_item": {
-                        "stream": {
-                            "url": next_url,
-                            "offset_in_milliseconds": 0
-                        }
-                    }
-                }
-            ]
-        })
-
-    # По умолчанию — просто завершить
-    return jsonify({
+    res = {
         "response": {
-            "text": "Навык завершён.",
+            "text": "Начинаем тренировку",
+            "tts": (
+                "<speak>"
+                "Начинаем тренировку. "
+                "<speaker audio=\"dialogs-upload/e8946e14-7a9f-4d28-b210-43e493267ff2/7c639f4f-345d-4201-b486-bbf9f46f327e.opus\"/>"
+                "<break time=\"1s\"/>"
+                "<speaker audio=\"dialogs-upload/e8946e14-7a9f-4d28-b210-43e493267ff2/0e4c93f1-019d-4c8f-9195-e0f709b6d51f.opus\"/>"
+                "<break time=\"1s\"/>"
+                "<speaker audio=\"dialogs-upload/e8946e14-7a9f-4d28-b210-43e493267ff2/a0acbef5-5562-49cc-966d-0f9bc35eba43.opus\"/>"
+                "<break time=\"1s\"/>"
+                "<speaker audio=\"dialogs-upload/e8946e14-7a9f-4d28-b210-43e493267ff2/ac484922-1130-45e1-9ede-a8a13d8c6e11.opus\"/>"
+                "</speak>"
+            ),
             "end_session": True
         },
-        "version": "1.0"
-    })
+        "version": req.get("version", "1.0")
+    }
+
+    return jsonify(res)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
